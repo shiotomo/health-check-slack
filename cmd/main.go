@@ -6,13 +6,11 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/shiotomo/health-check-slack/cmd"
+	"github.com/shiotomo/health-check-slack/pkg/service"
 	"github.com/slack-go/slack"
 )
 
 func main() {
-	fmt.Println("Hello World")
-
 	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
 
 	if err != nil {
@@ -36,7 +34,7 @@ func main() {
 		fmt.Println("Event Received")
 		switch ev := msg.Data.(type) {
 		case *slack.MessageEvent:
-			cmd.RunCmd(ev, rtm, api)
+			service.RunCmd(ev, rtm, api)
 		}
 	}
 }
