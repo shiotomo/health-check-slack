@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/shiotomo/health-check-slack/src"
+	"github.com/shiotomo/health-check-slack/cmd"
 	"github.com/slack-go/slack"
 )
 
@@ -36,7 +36,7 @@ func main() {
 		fmt.Println("Event Received")
 		switch ev := msg.Data.(type) {
 		case *slack.MessageEvent:
-			src.RunCmd(ev, rtm, api)
+			cmd.RunCmd(ev, rtm, api)
 		}
 	}
 }
