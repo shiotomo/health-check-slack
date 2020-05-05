@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/shiotomo/health-check-slack/src"
 	"github.com/slack-go/slack"
 )
 
@@ -32,10 +33,10 @@ func main() {
 	go rtm.ManageConnection()
 
 	for msg := range rtm.IncomingEvents {
-		fmt.Print("Event Received: ")
+		fmt.Println("Event Received")
 		switch ev := msg.Data.(type) {
 		case *slack.MessageEvent:
-			rtm.SendMessage(rtm.NewOutgoingMessage("hello world", ev.Channel))
+			src.RunCmd(ev, rtm, api)
 		}
 	}
 }
