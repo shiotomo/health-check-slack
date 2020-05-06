@@ -15,5 +15,5 @@ func ServerToString(server Server) string {
 	platform := "platform: " + server.Platform + "\n"
 	uptime := "uptime: " + strconv.FormatUint(server.Uptime, 10) + "\n"
 
-	return host + os + platform + uptime + ping
+	return host + os + platform + uptime
 }
