@@ -22,7 +22,6 @@ func checkServer() string {
 	server.Uptime, _ = host.Uptime()
 	server.Os = info.OS
 	server.Platform = info.Platform
-	server.Ping = ""
 
 	return models.ServerToString(server)
 }
