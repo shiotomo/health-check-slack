@@ -36,10 +36,25 @@ func judgeHost(hostA string, hostB string) bool {
 	return false
 }
 
-func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
+func help() string {
+	return "help test"
+}
+
+func RunAdminCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client, cmd []string) {
+	switch cmd[CMD_NUM] {
+	case "help":
+		rtm.SendMessage(rtm.NewOutgoingMessage(help(), ev.Channel))
+	default:
+		fmt.Println("stop")
+	}
+}
+
+func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client, role string) {
 	text := ev.Text
 	cmd := strings.Split(text, " ")
-	fmt.Println(cmd)
+	if role == "ADMIN" {
+		RunAdminCmd(ev, rtm, api, cmd)
+	}
 	switch cmd[CMD_NUM] {
 	case "check":
 		if len(cmd) > MIN_CMD_ARGC {
@@ -48,5 +63,7 @@ func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 				rtm.SendMessage(rtm.NewOutgoingMessage(checkServer(), ev.Channel))
 			}
 		}
+	default:
+		fmt.Println("no cmd")
 	}
 }
