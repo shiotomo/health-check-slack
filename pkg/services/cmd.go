@@ -12,6 +12,7 @@ import (
 const (
 	CMD_NUM      = 0
 	MIN_CMD_ARGC = 1
+	SERVER_NAME  = 1
 )
 
 func checkServer() string {
@@ -35,31 +36,14 @@ func judgeHost(hostA string, hostB string) bool {
 	}
 	return false
 }
-
-func help() string {
-	return "help test"
-}
-
-func RunAdminCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client, cmd []string) {
-	switch cmd[CMD_NUM] {
-	case "help":
-		rtm.SendMessage(rtm.NewOutgoingMessage(help(), ev.Channel))
-	default:
-		fmt.Println("stop")
-	}
-}
-
-func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client, role string) {
+func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 	text := ev.Text
 	cmd := strings.Split(text, " ")
-	if role == "ADMIN" {
-		RunAdminCmd(ev, rtm, api, cmd)
-	}
 	switch cmd[CMD_NUM] {
 	case "check":
 		if len(cmd) > MIN_CMD_ARGC {
 			info, _ := host.Info()
-			if judgeHost(cmd[1], info.Hostname) {
+			if judgeHost(cmd[SERVER_NAME], info.Hostname) {
 				rtm.SendMessage(rtm.NewOutgoingMessage(checkServer(), ev.Channel))
 			}
 		}
