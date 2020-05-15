@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/shiotomo/health-check-slack/pkg/models"
+	"github.com/shiotomo/health-check-slack/pkg/utils"
 	"github.com/shirou/gopsutil/host"
 	"github.com/slack-go/slack"
 )
@@ -23,8 +24,19 @@ func checkServer() string {
 	server.Uptime, _ = host.Uptime()
 	server.Os = info.OS
 	server.Platform = info.Platform
+	server.Ip = utils.GetHostIpAddr()
 
-	return models.ServerToString(server)
+	return models.CheckToString(server)
+}
+
+func callServer() string {
+	var server models.Server
+	info, _ := host.Info()
+
+	server.Host = info.Hostname
+	server.Ip = utils.GetHostIpAddr()
+
+	return models.CallToString(server)
 }
 
 func judgeHost(hostA string, hostB string) bool {
@@ -36,6 +48,7 @@ func judgeHost(hostA string, hostB string) bool {
 	}
 	return false
 }
+
 func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 	text := ev.Text
 	cmd := strings.Split(text, " ")
@@ -47,6 +60,8 @@ func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 				rtm.SendMessage(rtm.NewOutgoingMessage(checkServer(), ev.Channel))
 			}
 		}
+	case "call":
+		rtm.SendMessage(rtm.NewOutgoingMessage(callServer(), ev.Channel))
 	default:
 		fmt.Println("no cmd")
 	}
