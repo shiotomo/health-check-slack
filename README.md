@@ -10,7 +10,11 @@ Slackを利用したサーバーの稼働状況を通知する、対話型シス
 
 ## 使用方法
 
-### .env
+### .envを設定
+
+```
+$ cp .env.sample .env
+```
 
 - SLACK_BOT_TOKEN
   - SLACK_BOTを利用するためのトークンを指定
@@ -25,8 +29,14 @@ Slackを利用したサーバーの稼働状況を通知する、対話型シス
 $ go build cmd/main.go
 ```
 
-### 実行
+### Run
 
 ```
 $ ./main
+```
+
+バックグラウンドで実行する場合(Linux用)
+
+```
+nohup ./main &
 ```
