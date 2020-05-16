@@ -29,3 +29,15 @@ func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 		fmt.Println("no cmd")
 	}
 }
+
+// 管理コマンドの実行を行う関数
+func RunMasterCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
+	text := ev.Text
+	cmd := strings.Split(text, " ")
+	switch cmd[config.CmdNum] {
+	case "help":
+		rtm.SendMessage(rtm.NewOutgoingMessage(services.Help(), ev.Channel))
+	default:
+		fmt.Println("no master cmd")
+	}
+}

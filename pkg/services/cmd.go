@@ -1,6 +1,9 @@
 package services
 
 import (
+	"io/ioutil"
+	"os"
+
 	"github.com/shiotomo/health-check-slack/pkg/models"
 	"github.com/shiotomo/health-check-slack/pkg/utils"
 	"github.com/shirou/gopsutil/host"
@@ -29,4 +32,21 @@ func CallServer() string {
 	server.Ip = utils.GetHostIpAddr()
 
 	return models.CallToString(server)
+}
+
+// helpコマンド
+func Help() string {
+	f, err := os.Open("i18n/help/help_ja.txt")
+	if err != nil {
+		return "Error help command."
+	}
+	defer f.Close()
+
+	buf, err := ioutil.ReadAll(f)
+
+	if err != nil {
+		return "Error help command."
+	}
+
+	return string(buf)
 }

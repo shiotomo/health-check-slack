@@ -7,6 +7,8 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/shiotomo/health-check-slack/internal"
+	"github.com/shiotomo/health-check-slack/pkg/config"
+	"github.com/shiotomo/health-check-slack/pkg/utils"
 	"github.com/slack-go/slack"
 )
 
@@ -20,6 +22,7 @@ func main() {
 	}
 
 	token := os.Getenv("SLACK_BOT_TOKEN")
+	role := utils.GetBotRole(os.Getenv(("ROLE")))
 
 	api := slack.New(
 		token,
@@ -34,6 +37,9 @@ func main() {
 		fmt.Println("Event Received")
 		switch ev := msg.Data.(type) {
 		case *slack.MessageEvent:
+			if role == config.Master {
+				internal.RunMasterCmd(ev, rtm, api)
+			}
 			internal.RunCmd(ev, rtm, api)
 		}
 	}
