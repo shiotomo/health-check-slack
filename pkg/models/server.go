@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Server Model
 type Server struct {
 	Host     string   `json:"host"`
 	Os       string   `json:"os"`
@@ -13,6 +14,7 @@ type Server struct {
 	Ip       []string `json:ip`
 }
 
+// Checkコマンド用toString
 func CheckToString(server Server) string {
 	host := "host: " + server.Host + "\n"
 	os := "os: " + server.Os + "\n"
@@ -23,6 +25,7 @@ func CheckToString(server Server) string {
 	return host + os + platform + uptime + ip
 }
 
+// Callコマンド用toString
 func CallToString(server Server) string {
 	host := "host: " + server.Host + "\n"
 	ip := "ip: " + strings.Join(server.Ip, ", ") + "\n"

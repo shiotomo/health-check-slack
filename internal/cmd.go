@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/shiotomo/health-check-slack/pkg/config"
+	"github.com/shiotomo/health-check-slack/pkg/models"
 	"github.com/shiotomo/health-check-slack/pkg/services"
 	"github.com/shiotomo/health-check-slack/pkg/utils"
 	"github.com/shirou/gopsutil/host"
@@ -20,11 +21,11 @@ func RunCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 		if len(cmd) > config.MinCmdArgc {
 			info, _ := host.Info()
 			if utils.JudgeHost(cmd[config.ServerName], info.Hostname) {
-				rtm.SendMessage(rtm.NewOutgoingMessage(services.CheckServer(), ev.Channel))
+				rtm.SendMessage(rtm.NewOutgoingMessage(models.CheckToString(services.CheckServer()), ev.Channel))
 			}
 		}
 	case "call":
-		rtm.SendMessage(rtm.NewOutgoingMessage(services.CallServer(), ev.Channel))
+		rtm.SendMessage(rtm.NewOutgoingMessage(models.CallToString(services.CallServer()), ev.Channel))
 	default:
 		fmt.Println("no cmd")
 	}
@@ -36,7 +37,7 @@ func RunMasterCmd(ev *slack.MessageEvent, rtm *slack.RTM, api *slack.Client) {
 	cmd := strings.Split(text, " ")
 	switch cmd[config.CmdNum] {
 	case "help":
-		rtm.SendMessage(rtm.NewOutgoingMessage(services.Help(), ev.Channel))
+		rtm.SendMessage(rtm.NewOutgoingMessage(services.Help().Message, ev.Channel))
 	default:
 		fmt.Println("no master cmd")
 	}

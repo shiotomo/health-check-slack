@@ -10,7 +10,7 @@ import (
 )
 
 // checkコマンド
-func CheckServer() string {
+func CheckServer() models.Server {
 	var server models.Server
 	info, _ := host.Info()
 
@@ -20,33 +20,38 @@ func CheckServer() string {
 	server.Platform = info.Platform
 	server.Ip = utils.GetHostIpAddr()
 
-	return models.CheckToString(server)
+	return server
 }
 
 // callコマンド
-func CallServer() string {
+func CallServer() models.Server {
 	var server models.Server
 	info, _ := host.Info()
 
 	server.Host = info.Hostname
 	server.Ip = utils.GetHostIpAddr()
 
-	return models.CallToString(server)
+	return server
 }
 
 // helpコマンド
-func Help() string {
+func Help() models.Help {
+	var help models.Help
 	f, err := os.Open("i18n/help/help_ja.txt")
 	if err != nil {
-		return "Error help command."
+		help.Message = "Error help command"
+		return help
 	}
 	defer f.Close()
 
 	buf, err := ioutil.ReadAll(f)
 
 	if err != nil {
-		return "Error help command."
+		help.Message = "Error help command"
+		return help
 	}
 
-	return string(buf)
+	help.Message = string(buf)
+
+	return help
 }
