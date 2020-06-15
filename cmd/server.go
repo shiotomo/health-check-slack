@@ -9,7 +9,6 @@ import (
 func main() {
 	e := echo.New()
 
-	// 全てのリクエストで差し込みたいミドルウェア（ログとか）はここ
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
